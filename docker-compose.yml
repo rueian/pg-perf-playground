@@ -1,0 +1,18 @@
+version: '3.4'
+
+x-common: &common
+  image: golang:1.11.4
+  environment:
+    - GOPATH=/app/.dockerbuild/gopath
+  volumes:
+    - .:/app
+  depends_on:
+    - postgres
+
+services:
+  postgres:
+    image: postgres:11-alpine
+
+  bench:
+    <<: *common
+    command: ["bash", "-c", "cd /app && go test -bench=. -v ./..."]
